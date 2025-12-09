@@ -12,7 +12,9 @@ let config;
 try {
   config = require('./config.js');
 } catch (error) {
-  console.error('Error: config.js not found. Please copy config.example.js to config.js and fill in your credentials.');
+  console.error('Error: config.js not found.');
+  console.error('Please copy config.example.js to config.js and fill in your credentials:');
+  console.error('  cp config.example.js config.js');
   process.exit(1);
 }
 
@@ -41,8 +43,12 @@ function createRedditClient() {
  * @returns {boolean} - True if post matches any keyword
  */
 function matchesKeywords(post, keywords) {
-  const searchText = `${post.title} ${post.selftext || ''}`.toLowerCase();
-  return keywords.some(keyword => searchText.includes(keyword.toLowerCase()));
+  // Combine title and selftext, remove common markdown/html artifacts
+  const text = `${post.title} ${post.selftext || ''}`
+    .toLowerCase()
+    .replace(/[#*_\[\]()]/g, ' '); // Remove basic markdown formatting
+  
+  return keywords.some(keyword => text.includes(keyword.toLowerCase()));
 }
 
 /**
