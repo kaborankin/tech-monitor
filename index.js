@@ -129,7 +129,7 @@ async function main() {
   console.log('\nDone!');
 }
 
-// Run the script
+// Run the script if executed directly (not imported as a module)
 if (require.main === module) {
   main().catch(error => {
     console.error('Fatal error:', error);
